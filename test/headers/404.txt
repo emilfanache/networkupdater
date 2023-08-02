@@ -1,0 +1,5 @@
+{
+  "statusCode": 404,
+  "error": "Not Found",
+  "message": "profile of client 823f3161ae4f4495bf0a90c00a7dfbff does not exist"
+}
