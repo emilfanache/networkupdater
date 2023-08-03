@@ -52,6 +52,10 @@ NetworkUpdater::UpdaterErr NetworkUpdater::ReadMacAddrList(
         }
     }
 
+    if (mac_list_.size() == 0) {
+        throw(std::runtime_error("No mac address found in the hosts file!"));
+    }
+
     return NetworkUpdater::UpdaterErr::Ok;
 }
 
@@ -148,7 +152,7 @@ void NetworkUpdater::RequestToken() {
     }
     token_ = std::string(json["token"]);
 #endif
-    token_ = std::string("823f3161ae4f4495bf0a90c00a7dfbff");
+    token_ = std::string("123456789abcdef123456789abcdef");
 }
 
 std::vector<std::string> const& NetworkUpdater::GetMacList() const {

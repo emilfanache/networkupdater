@@ -1,0 +1,17 @@
+# build directory
+build
+.vscode
+
+
+# C++ objects and libs
+*.slo
+*.lo
+*.o
+*.a
+*.la
+*.lai
+*.so
+*.so.*
+*.dll
+*.dylib
+
