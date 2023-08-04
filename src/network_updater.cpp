@@ -84,7 +84,6 @@ NetworkUpdater::UpdaterErr NetworkUpdater::SendRequest(
     }
 
     uri = uri_ + port_string + std::string("/profiles/clientId:") + mac_addr;
-    // std::cout << uri.c_str() << std::endl;
 
     // before sending the request we need a token
     RequestToken();
@@ -95,11 +94,6 @@ NetworkUpdater::UpdaterErr NetworkUpdater::SendRequest(
                  cpr::Header{{"Content-Type", "application/json"},
                              {"x-client-id", client_id.c_str()},
                              {"x-authentication-token", token_.c_str()}});
-
-    // std::cout << r.status_code << std::endl;
-    // std::cout << r.text << std::endl;
-    // auto json = nlohmann::json::parse(r.text);
-    // std::cout << json.dump(4) << std::endl;
     *status_code = r.status_code;
 
     switch (r.status_code) {
@@ -121,8 +115,8 @@ NetworkUpdater::UpdaterErr NetworkUpdater::SendRequest(
         }
 
         default:
-            std::cout << "Request failed with an unknown error. Code: "
-                      << r.status_code << std::endl;
+            std::cout << "Server is unreachable. Code: " << r.status_code
+                      << std::endl;
             break;
     }
 

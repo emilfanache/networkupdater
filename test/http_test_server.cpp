@@ -158,12 +158,8 @@ int HttpTestServer::GetTestErrCode(const std::string& request_content) {
     std::string mac_first_octet =
         first_line.substr(pos + strlen("clientId:"), 2);
 
-    // HARDCODE error codes to test my content
-    std::map<const char*, int, cmp_str> code_map = {
-        {"b1", 401}, {"b2", 404}, {"b3", 409}, {"b4", 500}};
-
-    if (code_map.count(mac_first_octet.c_str())) {
-        return code_map[mac_first_octet.c_str()];
+    if (code_map_.count(mac_first_octet.c_str())) {
+        return code_map_[mac_first_octet.c_str()];
     }
 
     return 200;
