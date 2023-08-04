@@ -4,7 +4,7 @@
 #include <memory>
 #include <stdexcept>
 
-#include "include/network_updater.hpp"
+#include "../include/network_updater.hpp"
 
 const char default_json_config[] = "../resources/versions.json";
 const char default_host_file[] = "../resources/input.csv";

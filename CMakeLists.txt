@@ -26,14 +26,14 @@ FetchContent_GetProperties(googletest)
 file(GLOB TEST_SOURCES "${CMAKE_SOURCE_DIR}/test/network_updater_test.cpp"
                        "${CMAKE_SOURCE_DIR}/test/http_test_server.cpp")
 
-file(GLOB SOURCES "${CMAKE_SOURCE_DIR}/network_updater.cpp")
+file(GLOB SOURCES "${CMAKE_SOURCE_DIR}/src/network_updater.cpp")
 add_library(main_lib STATIC ${SOURCES})
 target_link_libraries(main_lib PRIVATE cpr::cpr)
 
-add_executable(network_updater main.cpp)
+add_executable(network_updater "${CMAKE_SOURCE_DIR}/src/main.cpp")
 target_link_libraries(network_updater main_lib)
 
-add_executable(test_runner ${TEST_SOURCES})
-target_link_libraries(test_runner main_lib gtest_main gmock_main)
+add_executable(test_updater ${TEST_SOURCES})
+target_link_libraries(test_updater main_lib gtest_main gmock_main)
 
 add_subdirectory(test)

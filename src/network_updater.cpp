@@ -7,8 +7,8 @@
 #include <stdexcept>
 
 #include <cpr/cpr.h>
-#include "include/json.hpp"
-#include "include/network_updater.hpp"
+#include "../include/json.hpp"
+#include "../include/network_updater.hpp"
 
 NetworkUpdater::NetworkUpdater(const char* hosts_fname, const char* json_fname,
                                const char* uri, int port) {

@@ -11,7 +11,7 @@
 #include <stdexcept>
 
 #include "../include/json.hpp"
-#include "http_test_server.hpp"
+#include "./http_test_server.hpp"
 
 HttpTestServer::HttpTestServer(const std::string& ip_address, int port) {
     sock_addr_.sin_family = AF_INET;
@@ -111,6 +111,7 @@ void HttpTestServer::WaitForConnections() {
 }
 
 int HttpTestServer::BuildHttpReply(int err_code, std::string* reply) {
+    // TODO(emil): Avoid hardcoded path
     std::string resource_path{"../test/headers/"};
     resource_path += std::to_string(err_code) + ".txt";
 
