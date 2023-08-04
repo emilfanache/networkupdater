@@ -41,7 +41,6 @@ int main(int argc, char* argv[]) {
 
     try {
         HttpTestServer htpp_server(ip_addr, port);
-        htpp_server.WaitForConnections();
     } catch (std::runtime_error const& e) {
         std::cout << e.what() << std::endl;
     }

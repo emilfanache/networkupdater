@@ -27,7 +27,8 @@ class NetworkUpdater {
     NetworkUpdater(const char* hosts_fname, const char* json_fname,
                    const char* uri, int port);
     ~NetworkUpdater() = default;
-    NetworkUpdater::UpdaterErr SendRequest(const std::string& mac_addr);
+    NetworkUpdater::UpdaterErr SendRequest(const std::string& mac_addr,
+                                           uint32_t* status_code);
     std::vector<std::string> const& GetMacList() const;
 
     static uint32_t kTokenRetryCount;

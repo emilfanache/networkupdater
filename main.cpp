@@ -105,7 +105,9 @@ int main(int argc, char* argv[]) {
     }
 
     for (const auto& mac : nwup->GetMacList()) {
-        NetworkUpdater::UpdaterErr status = nwup->SendRequest(mac);
+        uint32_t status_code = 0;
+        NetworkUpdater::UpdaterErr status =
+            nwup->SendRequest(mac, &status_code);
         if (status == NetworkUpdater::UpdaterErr::Fail) {
             if (fast_exit) {
                 std::cout << "Unable to send request for the host with mac "
@@ -124,7 +126,7 @@ int main(int argc, char* argv[]) {
                 output_file << "Retrying to send request after getting token "
                             << "for host mac: " << mac.c_str() << std::endl;
                 retry_iteration++;
-                status = nwup->SendRequest(mac);
+                status = nwup->SendRequest(mac, &status_code);
             }
 
             if (status != NetworkUpdater::UpdaterErr::Ok) {

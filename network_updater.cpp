@@ -76,7 +76,7 @@ NetworkUpdater::UpdaterErr NetworkUpdater::ReadJsonConfig(
 }
 
 NetworkUpdater::UpdaterErr NetworkUpdater::SendRequest(
-    const std::string& mac_addr) {
+    const std::string& mac_addr, uint32_t* status_code) {
     std::string uri;
     std::string port_string;
     if (port_) {
@@ -96,9 +96,11 @@ NetworkUpdater::UpdaterErr NetworkUpdater::SendRequest(
                              {"x-client-id", client_id.c_str()},
                              {"x-authentication-token", token_.c_str()}});
 
+    // std::cout << r.status_code << std::endl;
     // std::cout << r.text << std::endl;
     // auto json = nlohmann::json::parse(r.text);
     // std::cout << json.dump(4) << std::endl;
+    *status_code = r.status_code;
 
     switch (r.status_code) {
         case NetworkUpdater::HttpError::Success:
@@ -113,9 +115,8 @@ NetworkUpdater::UpdaterErr NetworkUpdater::SendRequest(
         case NetworkUpdater::HttpError::Conflict:
         case NetworkUpdater::HttpError::InternalError: {
             auto json = nlohmann::json::parse(r.text);
-            if (json["message"]) {
-                std::cout << json["message"] << std::endl;
-            }
+            // std::cout << json.dump(4) << json["message"] << std::endl;
+            // std::cout << json["message"] << std::endl;
             return NetworkUpdater::UpdaterErr::Fail;
         }
 

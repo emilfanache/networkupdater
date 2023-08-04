@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <fstream>
 #include <iostream>
+#include <map>
 #include <memory>
 #include <sstream>
 #include <stdexcept>
@@ -20,10 +21,21 @@ HttpTestServer::HttpTestServer(const std::string& ip_address, int port) {
     if (InitServer() < 0) {
         throw(std::runtime_error("Unable to initialize socket server!"));
     }
+
+    WaitForConnections();
 }
 
 HttpTestServer::~HttpTestServer() {
     StopServer();
+}
+
+void HttpTestServer::ListenForConnections() {
+    int status = listen(server_fd_, kMaxConnectionNumber);
+    if (listen(server_fd_, kMaxConnectionNumber) < 0) {
+        std::cout << "Error listening to socket:" << errno << std::endl;
+        StopServer();
+        return;
+    }
 }
 
 int HttpTestServer::InitServer() {
@@ -56,14 +68,9 @@ void HttpTestServer::StopServer() {
 }
 
 void HttpTestServer::WaitForConnections() {
-    int status;
-    std::cout << "----- WaitForConnections -----" << std::endl;
-    status = listen(server_fd_, kMaxConnectionNumber);
-    if (listen(server_fd_, kMaxConnectionNumber) < 0) {
-        std::cout << "Error listening to socket:" << errno << std::endl;
-        StopServer();
-        return;
-    }
+    // std::cout << "----- WaitForConnections -----" << std::endl;
+
+    ListenForConnections();
 
     int bytes;
     int addrlen = sizeof(sock_addr_);
@@ -83,11 +90,13 @@ void HttpTestServer::WaitForConnections() {
             return;
         }
 
-        std::cout << " = = = = = = = = Received: = = = = = = = =" << std::endl;
-        std::cout << buffer.get() << std::endl;
+        // std::cout << " = = = = = = = = Received: = = = = = = = =" << std::endl;
+        // std::cout << buffer.get() << std::endl;
+
+        int code = GetTestErrCode(std::string(buffer.get()));
 
         std::string reply;
-        if (BuildHttpReply(200, &reply) == 0) {
+        if (BuildHttpReply(code, &reply) == 0) {
             bytes = write(new_socket, reply.c_str(), reply.size());
             if (bytes < 0) {
                 close(new_socket);
@@ -118,8 +127,8 @@ int HttpTestServer::BuildHttpReply(int err_code, std::string* reply) {
                 "application/json\nContent-Length:");
         } else {
             auto json = nlohmann::json::parse(file_stream.str());
-            header = std::string("HTTP/1.1") + std::to_string(err_code) +
-                     std::string(json["error"]) +
+            header = std::string("HTTP/1.1 ") + std::to_string(err_code) +
+                     std::string(" ") + std::string(json["error"]) +
                      std::string(
                          "\nContent-Type: application/json\nContent-Length:");
         }
@@ -132,10 +141,29 @@ int HttpTestServer::BuildHttpReply(int err_code, std::string* reply) {
         str_stream << reply_header;
         str_stream << file_stream.str();
         *reply = str_stream.str();
-        std::cout << " = = = = = = = = Replying: = = = = = = = =" << std::endl;
-        std::cout << reply->c_str() << std::endl;
+        // std::cout << " = = = = = = = = Replying: = = = = = = = =" << std::endl;
+        // std::cout << reply->c_str() << std::endl;
         return 0;
     }
 
     return -1;
+}
+
+int HttpTestServer::GetTestErrCode(const std::string& request_content) {
+    std::istringstream str_stream(request_content);
+    std::string first_line;
+    getline(str_stream, first_line);
+    std::size_t pos = first_line.find("clientId:");
+    std::string mac_first_octet =
+        first_line.substr(pos + strlen("clientId:"), 2);
+
+    // HARDCODE error codes to test my content
+    std::map<const char*, int, cmp_str> code_map = {
+        {"b1", 401}, {"b2", 404}, {"b3", 409}, {"b4", 500}};
+
+    if (code_map.count(mac_first_octet.c_str())) {
+        return code_map[mac_first_octet.c_str()];
+    }
+
+    return 200;
 }

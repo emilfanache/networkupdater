@@ -23,7 +23,8 @@ endif()
 
 FetchContent_GetProperties(googletest)
 
-file(GLOB TEST_SOURCES "${CMAKE_SOURCE_DIR}/test/network_updater_test.cpp")
+file(GLOB TEST_SOURCES "${CMAKE_SOURCE_DIR}/test/network_updater_test.cpp"
+                       "${CMAKE_SOURCE_DIR}/test/http_test_server.cpp")
 
 file(GLOB SOURCES "${CMAKE_SOURCE_DIR}/network_updater.cpp")
 add_library(main_lib STATIC ${SOURCES})
