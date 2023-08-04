@@ -80,5 +80,6 @@ The server is spwaned as a dettached thread in the google test SetUpTestSuite() 
 ## Special thanks
 
 https://docs.libcpr.org/<br/>
+https://github.com/nlohmann/json <br/>
 https://stackoverflow.com/<br/>
 https://github.com/OsasAzamegbe/http-server<br/>
