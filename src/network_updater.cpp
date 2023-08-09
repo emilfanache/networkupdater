@@ -27,6 +27,9 @@ NetworkUpdater::NetworkUpdater(const char* hosts_fname, const char* json_fname,
     }
 
     port_ = port;
+
+    // before sending the first request we need a token
+    RequestToken();
 }
 
 NetworkUpdater::UpdaterErr NetworkUpdater::ReadMacAddrList(
@@ -84,9 +87,6 @@ NetworkUpdater::UpdaterErr NetworkUpdater::SendRequest(
     }
 
     uri = uri_ + port_string + std::string("/profiles/clientId:") + mac_addr;
-
-    // before sending the request we need a token
-    RequestToken();
 
     std::string client_id = std::to_string(GenerateHttpId());
     cpr::Response r =

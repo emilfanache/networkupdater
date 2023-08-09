@@ -25,12 +25,12 @@ cpr (Curl for people) offers a very intuitive API simplifying the many options o
 - Prepare the json config to send in a separate json file. By default resources/versions.json is used.<br/>
 - Prepare the host list in this format:<br/>
 ```mac_addresses
-"11:aa:cc:dd:ee:ff"
-"22:bb:cc:dd:ee:ff"
-"33:bb:cc:dd:ee:ff"
-"44:bb:cc:dd:ee:ff"
-"55:bb:cc:dd:ee:ff"
-"66:bb:cc:dd:ee:ff"
+"11:aa:cc:dd:ee:ff",
+"22:bb:cc:dd:ee:ff",
+"33:bb:cc:dd:ee:ff",
+"44:bb:cc:dd:ee:ff",
+"55:bb:cc:dd:ee:ff",
+"66:bb:cc:dd:ee:ff",
 ```
 By default resources/input.csv is used.<br/>
 
@@ -40,7 +40,7 @@ cmake ..
 make
 ./test_updater         # Run unit tests
 ./network_updater      # Sends the HTTP request to a server on listening on port 8080 (by default)
-./http_test_server     # Runs a TCP server that receives the request and replys with harcoded 
+./http_test_server     # Runs a TCP server that receives the request and replys with harcoded
                        # HTTP responses. Strictly used for testing purpose
 ```
 
@@ -75,6 +75,7 @@ The main ideea of the HTTP server was to reply to the updater with several speci
 "b3" -> 409
 "b4" -> 500
 ```
+By default the server will reply with status code 200.
 The server is spwaned as a dettached thread in the google test SetUpTestSuite() static method that is executed before the suite run making it available for all the test fixtures.<br/>
 
 ## Special thanks
